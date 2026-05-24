@@ -1,0 +1,62 @@
+# Clipforge Configuration
+# Edit this file to control all aspects of the video editing pipeline.
+# No code changes needed.
+
+output:
+  target_duration: 45       # target highlight reel length in seconds
+  format: mp4
+  quality_crf: 23           # 18=high quality/large file, 28=smaller file, 23=balanced
+  preset: fast              # ultrafast / fast / medium / slow (speed vs compression)
+
+subtitles:
+  enabled: true
+  font: "Noto Sans Thai"    # must be installed on the system
+  font_size: 48             # base size; auto-scales with video height if 0
+  color_primary: "white"
+  color_outline: "black"
+  outline_width: 2
+  shadow: 1
+  position: bottom          # bottom | top
+  margin_bottom: 40         # pixels from bottom edge
+
+keywords:
+  enabled: true
+  count: 5                  # max number of keyword overlays
+  font_size: 64
+  color: "white"
+  border_width: 3
+  border_color: "black"
+  position_y: top_third     # top_third | center | bottom_third
+  display_duration: 2.5     # seconds each keyword stays on screen
+
+zoom:
+  enabled: true
+  count: 2                  # number of zoom events in the output
+  duration: 2.5             # seconds per zoom event
+  max_scale: 1.3            # 1.0 = no zoom, 1.3 = 30% zoom in
+  speed: 0.004              # zoom rate per frame (higher = snappier)
+
+cutting:
+  min_segment_duration: 1.0  # drop transcript segments shorter than this (seconds)
+  merge_gap: 0.4             # merge consecutive selected segments within this gap (seconds)
+
+ai:
+  # --- CONTENT SELECTION ---
+  # These instructions tell Claude which parts of the video to keep.
+  # Write in plain English. Be specific about your content type.
+  content_selection: |
+    Select segments where the host is actively speaking and explaining an exercise or technique.
+    Prioritise: hooks ("if you want X, do this"), clear instructions, and exercise demonstrations with commentary.
+    Skip: silent gaps, repeated phrases, transitions without speech, background music only.
+    The output must tell a coherent story — a clear beginning (hook), middle (how-to), and end (tip or result).
+
+  # --- KEYWORD STYLE ---
+  # Instructions for how Claude picks and phrases the keyword overlays.
+  keyword_style: |
+    English fitness and exercise terminology that matches the spoken Thai content.
+    Use professional, concise gym terms (e.g. "Side Squat", "Hip Hinge", "Glutes", "Fat Burn").
+    Each keyword should be 1-3 words max. Avoid generic words like "Exercise" or "Workout".
+
+  # These are informational — help Claude understand the source material
+  content_language: thai
+  keyword_language: english
