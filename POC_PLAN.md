@@ -55,10 +55,10 @@ User "C" requested a fully automated video editing pipeline with these capabilit
 ```
 input.mp4
     │
-    ├─ [Groq Whisper API] ──────→ transcript.json
+    ├─ [faster-whisper local] ──→ transcript.json
     │                              (word + timestamps, Thai + EN)
     │
-    ├─ [Groq LLaMA 3.3-70B] ───→ highlight_segments.json
+    ├─ [claude -p subprocess] ──→ highlight_segments.json
     │                              ([{start, end, reason}])
     │
     ├─ [python-ass] ────────────→ subs.ass
@@ -81,12 +81,12 @@ input.mp4
 
 | Layer | Tool | Cost | Reason |
 |---|---|---|---|
-| Transcription | Groq Whisper large-v3-turbo | ~$0.00067/min or free tier | No GPU on machine; Groq is near-instant |
-| LLM highlight scoring | Groq LLaMA 3.3-70B | Free tier | No Anthropic API credits; Groq free covers POC |
+| Transcription | **faster-whisper large-v3** (local, CPU) | Free | Queue-based workflow; 10 min/video acceptable; no API dependency |
+| LLM highlight scoring | **`claude -p` subprocess** | ~$0 (Pro Agent SDK credits) | Subscription covers $20/mo of programmatic use; no separate API key |
 | Video processing | FFmpeg (subprocess) | Free | Most reliable for filter-graph ops |
 | Subtitle format | `.ass` + libass | Free | Only format with correct Thai rendering |
 | Thai font | Sarabun (fonts-thai-tlwg) | Free | Full Thai glyph coverage with libass |
-| Python libs | `groq`, `python-ass` | Free | Thin wrappers, well-maintained |
+| Python libs | `faster-whisper`, `python-ass` | Free | No Groq/OpenAI dependency |
 
 **Avoided:**
 - `ffmpeg-python` — unmaintained since 2019
