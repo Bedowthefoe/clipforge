@@ -11,6 +11,7 @@ import time
 import shutil
 import subprocess
 import tempfile
+import datetime
 from pathlib import Path
 
 
@@ -125,23 +126,22 @@ def test_python_ass(tmp_dir):
 
     # Build a minimal .ass with Thai text
     doc = ass.Document()
-    doc.script_info["ScriptType"] = "v4.00+"
-    doc.script_info["PlayResX"]   = "1920"
-    doc.script_info["PlayResY"]   = "1080"
+    doc.play_res_x = 1920
+    doc.play_res_y = 1080
 
     style = ass.Style()
-    style.name      = "Default"
-    style.fontname  = "Sarabun"
-    style.fontsize   = 48
-    style.primary_color = ass.Color(255, 255, 255, 0)
-    style.outline_color = ass.Color(0, 0, 0, 0)
-    style.outline    = 2
-    style.alignment  = 2  # bottom-center
+    style.name          = "Default"
+    style.fontname      = "Noto Sans Thai"
+    style.fontsize      = 48
+    style.primary_color = ass.data.Color(r=255, g=255, b=255, a=0)
+    style.outline_color = ass.data.Color(r=0,   g=0,   b=0,   a=0)
+    style.outline       = 2
+    style.alignment     = 2  # bottom-center
     doc.styles.append(style)
 
     event = ass.Dialogue()
-    event.start = ass.timedelta(seconds=0)
-    event.end   = ass.timedelta(seconds=3)
+    event.start = datetime.timedelta(seconds=0)
+    event.end   = datetime.timedelta(seconds=3)
     event.style = "Default"
     event.text  = "สวัสดีครับ ทดสอบภาษาไทย"
     doc.events.append(event)

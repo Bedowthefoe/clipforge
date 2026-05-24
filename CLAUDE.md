@@ -41,7 +41,7 @@ python main.py input.mp4
 | LLM highlight scoring | **`claude -p` subprocess** | Uses existing Pro subscription Agent SDK credits ($20/mo); no separate API key needed |
 | Video processing | **FFmpeg via subprocess** | Most reliable for filter-graph ops; ffmpeg-python is dead (unmaintained since 2019) |
 | Subtitle format | **`.ass` + libass** | Only correct path for Thai — `drawtext` uses FreeType only (no HarfBuzz, produces boxes) |
-| Thai font | **Sarabun** (fonts-thai-tlwg) | Full Thai glyph coverage confirmed with libass |
+| Thai font | **Noto Sans Thai** (fonts-noto) | Full Thai glyph coverage confirmed with libass; Sarabun not in Ubuntu default packages |
 | Subtitle generation | **python-ass** | Clean API to generate `.ass` files programmatically from timestamps |
 
 ### How `claude -p` works in this project
@@ -71,7 +71,7 @@ These are non-negotiable — violating them produces broken output:
 
 3. **Never use `drawtext` for Thai text** — FreeType without HarfBuzz = missing glyphs rendered as boxes; always use libass `.ass` files for Thai
 
-4. **Always specify Thai font explicitly in `.ass` Style block** — if unset, fontconfig may select a Latin font with no Thai glyphs
+4. **Always specify Thai font explicitly in `.ass` Style block** — use `Noto Sans Thai`; if unset, fontconfig may select a Latin font with no Thai glyphs
 
 5. **FFmpeg zoompan gotchas:**
    - Set `d=1` to process every frame (not just the first)
