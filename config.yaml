@@ -37,8 +37,9 @@ zoom:
   speed: 0.004              # zoom rate per frame (higher = snappier)
 
 cutting:
-  min_segment_duration: 1.0  # drop transcript segments shorter than this (seconds)
+  min_segment_duration: 1.5  # drop transcript segments shorter than this (seconds)
   merge_gap: 0.4             # merge consecutive selected segments within this gap (seconds)
+  incomplete_opener_max_duration: 3.0  # flag segments starting with incomplete markers if shorter than this
 
 ai:
   # --- CONTENT SELECTION ---
@@ -48,7 +49,9 @@ ai:
     Select segments where the host is actively speaking and explaining an exercise or technique.
     Prioritise: hooks ("if you want X, do this"), clear instructions, and exercise demonstrations with commentary.
     Skip: silent gaps, repeated phrases, transitions without speech, background music only.
+    Skip any segment that is an incomplete or dangling sentence — e.g. starts with a conditional (if/when/but) without a conclusion, or trails off mid-thought.
     The output must tell a coherent story — a clear beginning (hook), middle (how-to), and end (tip or result).
+    Every selected segment must be a complete, standalone thought that makes sense without the segments around it.
 
   # --- KEYWORD STYLE ---
   # Instructions for how Claude picks and phrases the keyword overlays.

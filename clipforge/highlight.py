@@ -45,7 +45,9 @@ def run(transcript: list[dict], video_duration: float,
     }
     """
     numbered = "\n".join(
-        f"[{i}] {s['start']:.1f}s-{s['end']:.1f}s: {s['text']}"
+        f"[{i}] {s['start']:.1f}s-{s['end']:.1f}s "
+        f"{'⚠ FRAGMENT' if not s.get('complete', True) else ''}:"
+        f" {s['text']}"
         for i, s in enumerate(transcript)
     )
 
