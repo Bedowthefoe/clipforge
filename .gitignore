@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.mp4
+*.mov
+*.wav
+*.mp3
+transcript.json
+highlight_segments.json
+*.ass
+output/
