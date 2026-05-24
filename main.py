@@ -42,8 +42,9 @@ def main():
     base_name  = os.path.splitext(os.path.basename(video_path))[0]
     out_dir    = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test")
     os.makedirs(out_dir, exist_ok=True)
-    output     = args.output or os.path.join(out_dir, f"{base_name}_edited.mp4")
-    tmp_dir    = tempfile.mkdtemp(prefix="clipforge_")
+    run_id     = time.strftime("%Y%m%d_%H%M%S")
+    output     = args.output or os.path.join(out_dir, f"{base_name}_{run_id}.mp4")
+    tmp_dir    = tempfile.mkdtemp(prefix=f"clipforge_{run_id}_")
 
     import subprocess
     probe = subprocess.run([
@@ -70,7 +71,17 @@ def main():
     step(2, 4, "Select highlights")
     analysis = highlight.run(transcript, duration, cfg)
 
-    # Save analysis for inspection
+    # Save analysis alongside output for audit trail
+    analysis_path = output.replace(".mp4", "_analysis.json")
+    with open(analysis_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "run_id":    run_id,
+            "input":     video_path,
+            "config":    args.config,
+            "transcript": args.transcript,
+            **analysis
+        }, f, ensure_ascii=False, indent=2)
+    # Also keep a copy in tmp
     with open(os.path.join(tmp_dir, "analysis.json"), "w", encoding="utf-8") as f:
         json.dump(analysis, f, ensure_ascii=False, indent=2)
 

@@ -15,4 +15,7 @@ transcript.json
 highlight_segments.json
 *.ass
 output/
-test/
+# Track analysis JSONs in test/ but not video files
+test/*.mp4
+test/*.wav
+test/*.ass
