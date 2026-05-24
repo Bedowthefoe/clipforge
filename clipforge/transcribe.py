@@ -11,7 +11,7 @@ from .config import ClipforgeConfig
 # Thai words/particles that mark sentence-opening fragments when isolated.
 # A segment starting with one of these and under a duration threshold is
 # likely the tail of a previous sentence or an orphaned clause.
-THAI_INCOMPLETE_OPENERS = {
+THAI_INCOMPLETE_OPENERS = [
     "ถ้า",    # if (conditional with no conclusion)
     "แต่",    # but (requires prior context)
     "เพราะ",  # because (subordinate clause)
@@ -19,8 +19,13 @@ THAI_INCOMPLETE_OPENERS = {
     "ซึ่ง",   # which (relative clause)
     "โดย",    # by/through (adverbial opener)
     "และ",    # and (continuation without context)
-}
-# Fragments that are just filler/trailing words
+]
+# Segments ending with these suggest the host is pointing to something
+# that happens AFTER the cut — visually incomplete even if grammatically ok
+THAI_DANGLING_ENDINGS = [
+    "ท่านี้", "ท่า นี้", "อันนี้", "อัน นี้", "แบบนี้", "แบบ นี้",
+    "นี้เลย", "นี้ เลย", "ตรงนี้", "ตรง นี้",
+]
 THAI_FILLER_PHRASES = {
     "ไม่ต้อง เยอะ", "นะ", "นะครับ", "นะคะ", "ค่ะ", "ครับ",
 }
@@ -36,10 +41,15 @@ def _annotate_completeness(segments: list[dict], min_dur: float) -> list[dict]:
         dur   = seg["end"] - seg["start"]
         first = text.split()[0] if text.split() else ""
 
+        text_nospace = text.replace(" ", "")
+        starts_incomplete = any(text_nospace.startswith(op) for op in THAI_INCOMPLETE_OPENERS)
+        ends_dangling     = any(text_nospace.endswith(e.replace(" ", "")) for e in THAI_DANGLING_ENDINGS)
+
         is_fragment = (
             dur < min_dur
             or text in THAI_FILLER_PHRASES
-            or (first in THAI_INCOMPLETE_OPENERS and dur < 3.0)
+            or (starts_incomplete and dur < 3.0)
+            or ends_dangling
         )
         seg["complete"] = not is_fragment
 
