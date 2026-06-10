@@ -2,49 +2,98 @@
 # Edit this file to control all aspects of the video editing pipeline.
 # No code changes needed.
 
+# ── Pipeline mode ──
+# overlay_only    → keep full input, just burn subtitles + Thai keyword popups + baseline zoom
+#                   (matches reference output style; best for <60s influencer clips)
+# highlight_reel  → cut speech segments to target_duration, add segment-level zoom (legacy)
+mode: overlay_only
+
 output:
-  target_duration: 45       # target highlight reel length in seconds
+  target_duration: 45       # highlight_reel only — target length in seconds
   format: mp4
   quality_crf: 23           # 18=high quality/large file, 28=smaller file, 23=balanced
   preset: fast              # ultrafast / fast / medium / slow (speed vs compression)
 
+# ── Baseline framing (overlay_only mode) ──
+# Crops the raw to tighten the subject in frame, then scales back up.
+# Measured from the reference video: subject fills ~55% of frame in target vs ~37% in raw.
+framing:
+  enabled: true
+  baseline_zoom: 1.48       # 1.0 = no crop, 1.48 = take central 67% then scale back
+  crop_center_y: 0.56       # vertical center of crop, 0-1 (0.5=center, >0.5=lower)
+  crop_center_x: 0.50       # horizontal center of crop, 0-1
+
 subtitles:
   enabled: true
-  font: "Noto Sans Thai"    # must be installed on the system
-  font_size: 48             # base size; auto-scales with video height if 0
+  font: "IBM Plex Sans Thai"  # loopless modern; 15 GPOS lookups for proper Thai mark stacking
+  font_size: 0              # 0 = auto-scale from frame height; set explicit px to override
   color_primary: "white"
-  color_outline: "black"
-  outline_width: 2
-  shadow: 1
+  color_outline: "white"    # invisible outline; we use drop shadow instead
+  outline_width: 0          # 0 disables the border (matches reference style)
+  shadow: 10                # drop-shadow offset in pixels (reference uses a strong shadow)
+  shadow_color: "000000"    # shadow RRGGBB
+  shadow_alpha: 60          # 0=opaque shadow, 255=invisible; reference looks ~75% opaque
   position: bottom          # bottom | top
-  margin_bottom: 40         # pixels from bottom edge
+  margin_bottom: 400        # pixels from bottom edge
+  margin_horizontal: 50     # ~2.5% each side — leverage the full screen width
+  # Thai line wrapping (uses PyThaiNLP newmm tokenizer to break at word boundaries)
+  max_chars_per_line: 0     # 0 = auto-compute from font_size and frame width
+  # 1 = single-line events (faster on-screen changes, larger visual font).
+  # >1 = multi-line subtitles using \N wrap (slower changes, more text per event).
+  max_lines: 1
+  # ── Industry-standard timing (Netflix + TikTok short-form) ──
+  # Each subtitle event's on-screen duration is computed from its character count
+  # at `target_cps` reading speed, then clamped to [min, max].
+  # Whisper word timestamps are NOT used — they over-extend through silences.
+  min_event_duration: 0.83      # Netflix minimum (5/6 s = 20 frames @ 24fps)
+  max_event_duration: 2.5       # short-form ceiling (TikTok sweet spot)
+  target_cps: 18                # Thai chars/sec — matches typical speech rate; tune up for faster pace
+  inter_event_gap: 0.08         # ~2 frames @ 25fps — prevents flicker between events
+  lead_time: 0.0                # seconds to show sub before its speech start (0 = aligned)
+  # ── Per-line speech-anchoring (Option E) ──
+  # Each line's start is anchored to the Whisper word that contains its first char,
+  # so subs track the host's actual rhythm — not just the segment boundary.
+  # If the anchor lands after the cumulative cursor (host paused), honor that gap up to
+  # `max_drift_correction` seconds. Beyond that, accept silence is real and resume.
+  anchor_to_whisper_words: true
+  max_drift_correction: 1.0     # cap seconds of silence inserted at an anchor
 
 keywords:
   enabled: true
-  count: 5                  # max number of keyword overlays
-  font_size: 64
-  color: "white"
-  border_width: 3
-  border_color: "black"
-  position_y: top_third     # top_third | center | bottom_third
+  count: 3                  # number of keyword popups (reference has ~3 in 52s)
+  language: th              # 'th' = Thai phrases (matches reference); 'en' = English
   display_duration: 2.5     # seconds each keyword stays on screen
+  # ── Popup style (matches reference: white fill, thick pink outline, top of frame) ──
+  popup_font_size: 240      # large display size (4K-tuned)
+  popup_color: "white"
+  popup_outline_color: "FF1493"  # hot pink / magenta (RRGGBB hex)
+  popup_outline_width: 18
+  popup_position: top       # top | center | bottom
+  popup_margin_top: 700     # pixels from top edge (~18% down on 4K)
 
 zoom:
-  enabled: true
-  count: 2                  # number of zoom events in the output
-  duration: 2.5             # seconds per zoom event
-  max_scale: 1.3            # 1.0 = no zoom, 1.3 = 30% zoom in
-  speed: 0.004              # zoom rate per frame (higher = snappier)
+  # Only active in highlight_reel mode (overlay_only uses framing.baseline_zoom instead).
+  enabled: false            # turned off by default — reference has no segment-level zoom
+  count: 2
+  duration: 2.5
+  max_scale: 1.3
+  speed: 0.004
 
 cutting:
-  min_segment_duration: 1.5  # drop transcript segments shorter than this (seconds)
-  merge_gap: 0.4             # merge consecutive selected segments within this gap (seconds)
-  incomplete_opener_max_duration: 3.0  # flag segments starting with incomplete markers if shorter than this
+  # Only active in highlight_reel mode. In overlay_only the full video is kept.
+  min_segment_duration: 1.5
+  merge_gap: 0.4
+  incomplete_opener_max_duration: 3.0
+  # ── Pause-based re-segmentation (overlay_only mode) ──
+  # Whisper produces long monolithic segments that are hard to read as subtitles.
+  # We use word-level timestamps to split long segments at natural speech pauses.
+  resegment_max_duration: 5.0       # split any segment longer than this (seconds)
+  resegment_pause_gap: 0.4          # gap between tokens that triggers a split
+  resegment_silent_token_dur: 1.0   # held-token longer than this = silence/demo
+  resegment_min_duration: 0.4       # drop sub-segments shorter than this
 
 ai:
-  # --- CONTENT SELECTION ---
-  # These instructions tell Claude which parts of the video to keep.
-  # Write in plain English. Be specific about your content type.
+  # --- CONTENT SELECTION (highlight_reel mode only) ---
   content_selection: |
     Select segments where the host is actively speaking and explaining an exercise or technique.
     Prioritise: hooks ("if you want X, do this"), clear instructions, and exercise demonstrations with commentary.
@@ -54,12 +103,25 @@ ai:
     Every selected segment must be a complete, standalone thought that makes sense without the segments around it.
 
   # --- KEYWORD STYLE ---
-  # Instructions for how Claude picks and phrases the keyword overlays.
+  # Instructions for how Claude picks and phrases the keyword popups.
   keyword_style: |
-    English fitness and exercise terminology that matches the spoken Thai content.
-    Use professional, concise gym terms (e.g. "Side Squat", "Hip Hinge", "Glutes", "Fat Burn").
-    Each keyword should be 1-3 words max. Avoid generic words like "Exercise" or "Workout".
+    Short Thai phrases (2-4 words) that summarize the key technique or topic at that moment.
+    Pick moments where the host introduces a new concept, names a technique, or gives a key tip.
+    Examples of good phrases: "หลังยืดตรง" (back straightened), "หมุนเยอะขึ้นเรื่อยๆ" (rotate more progressively), "ควบคุมกล้ามเนื้อ" (control the muscle).
+    Avoid full sentences and filler words like "นะครับ", "ค่ะ".
 
   # These are informational — help Claude understand the source material
   content_language: thai
-  keyword_language: english
+  keyword_language: thai
+
+  # ── Transcript cleanup pass ──
+  # Claude proofreads Whisper output and fixes obvious Thai STT errors
+  # (tone marks, sound-alikes, Sara-Am decomposition, English loan words).
+  # Guidelines live in clipforge/cleanup_rules.md (read every run).
+  # Confirmed corrections accumulate in clipforge/cleanup_memory.md.
+  cleanup_enabled: true
+  cleanup_topic_hint: |
+    Thai fitness instructional video — bodyweight exercises, form cues, and technique tips.
+    Speaker is a male fitness coach demonstrating moves like lunges, squats, side abs.
+    Expect vocabulary: กระชับ, ส้นเท้า, หัวเข่า, ลงน้ำหนัก, กล้ามเนื้อ, ก้น, ฟอร์ม.
+  cleanup_min_confidence: medium    # high | medium | low — threshold for applying corrections

@@ -69,23 +69,102 @@ def _filter_and_reindex(segments: list[dict], min_dur: float) -> list[dict]:
     return segments
 
 
-def run(video_path: str, cfg: ClipforgeConfig, tmp_dir: str,
-        existing_transcript: Optional[str] = None) -> list[dict]:
+def _resegment_at_pauses(segments: list[dict],
+                         max_dur: float = 5.0,
+                         pause_gap: float = 0.4,
+                         silent_token_dur: float = 1.0,
+                         min_dur: float = 0.4) -> list[dict]:
     """
-    Returns filtered, annotated list of segments:
-      [{"start", "end", "text", "words", "complete"}]
-    Indices are stable — filtering happens before returning so Claude's
-    segment_index references always match the returned list.
+    Split long segments at word-level pauses using Whisper's word timestamps.
+
+    Two pause signals (either triggers a split):
+      a) gap >= pause_gap between consecutive tokens
+      b) a single token whose duration >= silent_token_dur (Whisper extends the
+         last token through silence — common when the host pauses to demo)
+
+    Segments under max_dur pass through unchanged.
+    Sub-segments shorter than min_dur are dropped.
+    """
+    result = []
+    for seg in segments:
+        words   = seg.get("words") or []
+        seg_dur = seg["end"] - seg["start"]
+        if not words or seg_dur <= max_dur:
+            result.append(seg)
+            continue
+
+        # Find indices in `words` where a NEW sub-segment should start.
+        splits = []
+        for i in range(1, len(words)):
+            prev = words[i - 1]
+            gap  = words[i]["start"] - prev["end"]
+            prev_dur = prev["end"] - prev["start"]
+            if gap >= pause_gap or prev_dur >= silent_token_dur:
+                splits.append(i)
+
+        if not splits:
+            # No clear pause, but segment is long — fall back to mid-point split.
+            splits = [len(words) // 2]
+
+        boundaries = [0] + splits + [len(words)]
+        for j in range(len(boundaries) - 1):
+            ws = words[boundaries[j]: boundaries[j + 1]]
+            if not ws:
+                continue
+            sub_text = "".join(w["word"] for w in ws).strip()
+            if not sub_text:
+                continue
+            sub_start = ws[0]["start"]
+            sub_end   = ws[-1]["end"]
+            if sub_end - sub_start < min_dur:
+                continue
+            result.append({
+                "start":    round(sub_start, 3),
+                "end":      round(sub_end, 3),
+                "text":     sub_text,
+                "words":    ws,
+                "complete": seg.get("complete", True),
+            })
+
+    if len(result) != len(segments):
+        print(f"  → Resegmented at pauses: {len(segments)} → {len(result)} segments")
+    return result
+
+
+def run(video_path: str, cfg: ClipforgeConfig, tmp_dir: str,
+        existing_transcript: Optional[str] = None,
+        filter_incomplete: bool = True,
+        resegment_pauses: bool = False) -> list[dict]:
+    """
+    Returns annotated list of segments: [{"start", "end", "text", "words", "complete"}]
+
+    filter_incomplete: drop fragments + reindex (highlight_reel mode).
+    resegment_pauses:  split long segments at word-level pauses (overlay_only).
+                       Produces shorter on-screen subtitle blocks that match
+                       professional subtitle practice (~3-5s each).
     """
     min_dur = cfg.cutting.min_segment_duration
+
+    def _postprocess(data: list[dict]) -> list[dict]:
+        data = _annotate_completeness(data, min_dur)
+        if filter_incomplete:
+            data = _filter_and_reindex(data, min_dur)
+        if resegment_pauses:
+            data = _resegment_at_pauses(
+                data,
+                max_dur=cfg.cutting.resegment_max_duration,
+                pause_gap=cfg.cutting.resegment_pause_gap,
+                silent_token_dur=cfg.cutting.resegment_silent_token_dur,
+                min_dur=cfg.cutting.resegment_min_duration,
+            )
+        return data
 
     if existing_transcript and os.path.exists(existing_transcript):
         print(f"  → Loading transcript: {existing_transcript}")
         with open(existing_transcript, encoding="utf-8") as f:
             data = json.load(f)
-        data = _annotate_completeness(data, min_dur)
-        data = _filter_and_reindex(data, min_dur)
-        print(f"  → {len(data)} segments after filtering")
+        data = _postprocess(data)
+        print(f"  → {len(data)} segments after post-processing")
         return data
 
     audio_path = os.path.join(tmp_dir, "audio.wav")
@@ -116,8 +195,8 @@ def run(video_path: str, cfg: ClipforgeConfig, tmp_dir: str,
                   for w in (s.words or [])]
     } for s in segments if s.text.strip()]
 
-    data = _annotate_completeness(data, min_dur)
-    data = _filter_and_reindex(data, min_dur)
+    data = _postprocess(data)
+    print(f"  → {len(data)} segments after post-processing")
 
     cache_path = os.path.join(tmp_dir, "transcript.json")
     with open(cache_path, "w", encoding="utf-8") as f:

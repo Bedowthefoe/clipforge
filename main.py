@@ -55,42 +55,67 @@ def main():
     print(f"\n{BOLD}Clipforge{RESET}")
     print(f"  Input:    {video_path} ({duration:.0f}s)")
     print(f"  Config:   {args.config}")
+    print(f"  Mode:     {cfg.mode}")
     print(f"  Output:   {output}")
-    print(f"  Target:   ~{cfg.output.target_duration}s highlight reel")
+    if cfg.mode == "highlight_reel":
+        print(f"  Target:   ~{cfg.output.target_duration}s highlight reel")
     print(f"  Tmp:      {tmp_dir}")
 
     t_total = time.time()
 
     # ── Step 1: Transcribe ──
+    # overlay_only keeps the full transcript; highlight_reel filters incomplete segments
     from clipforge import transcribe
-    step(1, 4, "Transcribe")
-    transcript = transcribe.run(video_path, cfg, tmp_dir, args.transcript)
+    step(1, 5, "Transcribe")
+    transcript = transcribe.run(
+        video_path, cfg, tmp_dir, args.transcript,
+        filter_incomplete=(cfg.mode == "highlight_reel"),
+        resegment_pauses=(cfg.mode == "overlay_only"),
+    )
+
+    # ── Step 1b: Cleanup transcript (Claude proofreading pass) ──
+    cleanup_result = None
+    if cfg.ai.cleanup_enabled and transcript:
+        from clipforge import cleanup
+        step(2, 5, "Cleanup transcript (Claude proofread)")
+        cleanup_result = cleanup.clean_transcript(
+            transcript, cfg,
+            topic_hint=cfg.ai.cleanup_topic_hint,
+            min_confidence=cfg.ai.cleanup_min_confidence,
+        )
+        transcript = cleanup_result["segments"]
 
     # ── Step 2: Select highlights ──
     from clipforge import highlight
-    step(2, 4, "Select highlights")
+    step(3, 5, "Select highlights")
     analysis = highlight.run(transcript, duration, cfg)
 
     # Save analysis alongside output for audit trail
     analysis_path = output.replace(".mp4", "_analysis.json")
+    audit = {
+        "run_id":    run_id,
+        "input":     video_path,
+        "config":    args.config,
+        "transcript": args.transcript,
+        **analysis,
+    }
+    if cleanup_result is not None:
+        audit["cleanup"] = {
+            "notes":       cleanup_result["notes"],
+            "corrections": cleanup_result["corrections"],
+        }
     with open(analysis_path, "w", encoding="utf-8") as f:
-        json.dump({
-            "run_id":    run_id,
-            "input":     video_path,
-            "config":    args.config,
-            "transcript": args.transcript,
-            **analysis
-        }, f, ensure_ascii=False, indent=2)
+        json.dump(audit, f, ensure_ascii=False, indent=2)
     # Also keep a copy in tmp
     with open(os.path.join(tmp_dir, "analysis.json"), "w", encoding="utf-8") as f:
         json.dump(analysis, f, ensure_ascii=False, indent=2)
 
     # ── Step 3 + 4: Edit ──
     from clipforge import editor
-    step(3, 4, "Cut & assemble")
+    step(4, 5, "Cut & assemble")
     editor.run(video_path, transcript, analysis, cfg, tmp_dir, output)
 
-    step(4, 4, "Done")
+    step(5, 5, "Done")
     elapsed = time.time() - t_total
     print(f"\n{BOLD}{GREEN}✓ Finished in {elapsed/60:.1f} minutes{RESET}")
     print(f"  Output:   {output}")
