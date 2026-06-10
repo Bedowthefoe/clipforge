@@ -1,0 +1,92 @@
+{
+  "run_id": "20260604_172619",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "ลงน้ำหนักถูกต้อง",
+      "start": 10.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าลงพื้น",
+      "start": 20.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's key technique cues: the importance of correct weight loading (~10s), pressing the heel flat to the floor (~20s), and engaging the heel and glutes instead of the knee (~34s).",
+  "cleanup": {
+    "notes": "Main error types found: (1) repeated ยอด → ย่อ tone-mark error on the key movement cue 'lower down' (indices 0 and 9); (2) เสือ → เสื่อ tone-mark error on the prop noun 'mat'; (3) บ่ายเจ็บ → ปวดเจ็บ sound-alike consonant swap in a pain-reduction phrase; (4) ฟังชันอล loan-word mis-spelling; (5) spurious ล inserted into พอ in two adjacent fragment segments.",
+    "corrections": [
+      {
+        "index": 0,
+        "original": "เรายอดลงเนี่ยนะครับ",
+        "corrected": "เราย่อลงเนี่ยนะครับ",
+        "confidence": "high",
+        "reason": "ยอด (tip/excellent) makes no sense in a step-up exercise cue; ย่อ (lower/bend) is the standard fitness term for lowering the body — tone-mark error ยอด → ย่อ",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 1,
+        "original": "ฟังชันอล",
+        "corrected": "ฟังก์ชันนัล",
+        "confidence": "high",
+        "reason": "phonetic mis-spelling of the English loan word 'functional'; ฟังก์ชันนัล is the standard Thai orthography for this term",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 3,
+        "original": "บ่ายเจ็บ",
+        "corrected": "ปวดเจ็บ",
+        "confidence": "high",
+        "reason": "fitness context — ลดอาการปวดเจ็บ (reduce pain) is the expected phrase; บ่าย (afternoon) produces nonsense here; sound-alike consonant substitution บ → ป",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 6,
+        "original": "มีเสือที่แบบพับได้",
+        "corrected": "มีเสื่อที่แบบพับได้",
+        "confidence": "high",
+        "reason": "เสือ (tiger) makes no sense; เสื่อ (mat/pad) that can be folded is exactly the prop being described — tone-mark error, mai ek dropped from สระ เ-ื่อ",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 7,
+        "original": "แถมพอลวางเข่านี่",
+        "corrected": "แถมพอวางเข่านี่",
+        "confidence": "medium",
+        "reason": "พอล has no meaning here; พอ (when/as soon as) produces a grammatical Thai clause — the ล appears to be a spurious insertion by Whisper",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 8,
+        "original": "ถมพอลวางเข่าก็จะ",
+        "corrected": "ถมพอวางเข่าก็จะ",
+        "confidence": "medium",
+        "reason": "same พอล → พอ error as index 7; both segments are fragments of the same split sentence",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 9,
+        "original": "จังหวะที่ยอดลงไป",
+        "corrected": "จังหวะที่ย่อลงไป",
+        "confidence": "high",
+        "reason": "identical ยอด → ย่อ tone-mark error as index 0; จังหวะที่ย่อลงไป (the moment you lower down) is the correct movement cue",
+        "applied": true,
+        "apply_method": "substring replace"
+      }
+    ]
+  }
+}

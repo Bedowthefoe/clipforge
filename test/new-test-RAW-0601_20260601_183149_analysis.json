@@ -1,0 +1,24 @@
+{
+  "run_id": "20260601_183149",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "กดส้นเท้าลงเป็นหลัก",
+      "start": 12.3,
+      "duration": 2.5
+    },
+    {
+      "text": "รองรับหัวเข่า",
+      "start": 20.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 34.0,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's core technique cues: heel-as-foundation weight cue at the first key instruction (~12s), knee-support benefit of the pad at the equipment tip (~20s), and heel-and-glute activation habit at the repetition payoff (~34s)."
+}

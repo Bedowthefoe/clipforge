@@ -1,0 +1,24 @@
+{
+  "run_id": "20260601_182625",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "สร้างกล้ามเนื้อ",
+      "start": 5.1,
+      "duration": 2.5
+    },
+    {
+      "text": "รองรับหัวเข่า",
+      "start": 20.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups cover the video's core progression: functional muscle building (intro concept), knee support benefit (equipment tip midway), and heel-and-glute activation (the key takeaway reinforced in the final third)."
+}

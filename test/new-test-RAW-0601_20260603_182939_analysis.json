@@ -1,0 +1,69 @@
+{
+  "run_id": "20260603_182939",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "สร้างกล้ามเนื้อ",
+      "start": 5.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าเป็นหลัก",
+      "start": 12.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 34.0,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's key teaching beats: the functional strength goal at the open, the heel-press cue when the host first names the technique, and the glute-activation payoff in the repetition section.",
+  "cleanup": {
+    "notes": "Four high-confidence tone-mark errors corrected (ยอด→ย่อ twice, เสือ→เสื่อ, บ่าย→ปวด) plus one medium-confidence loan-word spelling fix; segments [7] and [8] contain the unclear word พอล which could not be confidently reconstructed and were left unchanged.",
+    "corrections": [
+      {
+        "index": 0,
+        "original": "เรายอดลงเนี่ยนะครับ",
+        "corrected": "เราย่อลงเนี่ยนะครับ",
+        "confidence": "high",
+        "reason": "tone-mark error — ยอด (peak/top) makes no sense in a step-up exercise; ย่อลง (lower/squat down) is the standard fitness cue and matches the movement described",
+        "applied": true
+      },
+      {
+        "index": 1,
+        "original": "ฟังชันอล",
+        "corrected": "ฟังก์ชันแนล",
+        "confidence": "medium",
+        "reason": "loan-word spelling — 'functional' is standardly rendered ฟังก์ชันแนล in Thai fitness content; ฟังชันอล is missing the ก์ and uses an atypical ending",
+        "applied": true
+      },
+      {
+        "index": 3,
+        "original": "บ่ายเจ็บ",
+        "corrected": "ปวดเจ็บ",
+        "confidence": "high",
+        "reason": "sound-alike consonant substitution — บ (b) vs ป (p); บ่าย means 'afternoon', ปวดเจ็บ means 'pain/aching' which fits อาการ in a fitness injury-prevention context perfectly",
+        "applied": true
+      },
+      {
+        "index": 6,
+        "original": "เสือ",
+        "corrected": "เสื่อ",
+        "confidence": "high",
+        "reason": "tone-mark error — เสือ (tiger) is nonsensical; เสื่อ (mat/foam pad) fits perfectly: the speaker is describing a foldable mat (พับได้) that makes pressing the heel easier",
+        "applied": true
+      },
+      {
+        "index": 9,
+        "original": "จังหวะที่ยอดลงไป",
+        "corrected": "จังหวะที่ย่อลงไป",
+        "confidence": "high",
+        "reason": "same tone-mark error as index 0 — ยอด (peak) vs ย่อ (lower/squat); ย่อลงไป is the natural cue for the descent phase of a step-up or lunge",
+        "applied": true
+      }
+    ]
+  }
+}

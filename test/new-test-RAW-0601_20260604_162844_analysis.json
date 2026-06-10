@@ -1,0 +1,85 @@
+{
+  "run_id": "20260604_162844",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "ลงน้ำหนักให้ถูกต้อง",
+      "start": 10.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าลงพื้น",
+      "start": 28.6,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 37.1,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups target the core technique cues: proper weight distribution (10s), pressing the heel flat to the floor (28s), and the payoff—training the body to load heel and glutes instead of the knee (37s).",
+  "cleanup": {
+    "notes": "Primary error types: (1) repeated tone-mark drop on ย่อลง→ยอดลง across two segments; (2) one classic sound-alike consonant swap ป→บ producing บ่ายเจ็บ instead of ปวดเจ็บ; (3) one vowel tone-mark error เสื่อ→เสือ turning 'mat' into 'tiger'; (4) a spurious ล appended to พอ in two consecutive segments, likely a boundary artifact from the ASR decoder.",
+    "corrections": [
+      {
+        "index": 0,
+        "original": "ยอดลง",
+        "corrected": "ย่อลง",
+        "confidence": "high",
+        "reason": "fitness context — 'ย่อลง' (lower the body) fits a step-up/lunge cue; 'ยอดลง' (peak descends) is not a fitness phrase. Missing mai ek tone mark on ย่อ.",
+        "applied": true
+      },
+      {
+        "index": 1,
+        "original": "ฟังชันอล",
+        "corrected": "ฟังก์ชันนัล",
+        "confidence": "medium",
+        "reason": "English loan word 'functional' transcribed without the ก์ consonant cluster; ฟังก์ชันนัล is the standard Thai spelling of this term.",
+        "applied": true
+      },
+      {
+        "index": 3,
+        "original": "บ่ายเจ็บ",
+        "corrected": "ปวดเจ็บ",
+        "confidence": "high",
+        "reason": "fitness context — 'ปวดเจ็บ' (pain/soreness) is the expected phrase; 'บ่าย' (afternoon) is a sound-alike consonant substitution (ป→บ).",
+        "applied": true
+      },
+      {
+        "index": 6,
+        "original": "เสือ",
+        "corrected": "เสื่อ",
+        "confidence": "high",
+        "reason": "tone mark error — 'เสื่อ' (mat, e.g. a folding foam mat) fits the context of 'พับได้' (foldable); 'เสือ' (tiger) makes no sense in a fitness equipment reference.",
+        "applied": true
+      },
+      {
+        "index": 7,
+        "original": "พอล",
+        "corrected": "พอ",
+        "confidence": "medium",
+        "reason": "spurious ล — 'แถมพอวางเข่า' (and when placing the knee down) is a natural Thai connective phrase; 'พอล' is not a word here and the ล appears to be a STT insertion artifact.",
+        "applied": true
+      },
+      {
+        "index": 8,
+        "original": "พอล",
+        "corrected": "พอ",
+        "confidence": "medium",
+        "reason": "same spurious ล as index 7 — segment is a continuation of the same clause; 'พอวางเข่า' (when the knee is placed) is the correct phrase.",
+        "applied": true
+      },
+      {
+        "index": 9,
+        "original": "ยอดลง",
+        "corrected": "ย่อลง",
+        "confidence": "high",
+        "reason": "identical error to index 0 — 'ย่อลง' (lower down) is the correct fitness cue describing the descent phase of the movement.",
+        "applied": true
+      }
+    ]
+  }
+}

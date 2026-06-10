@@ -1,0 +1,85 @@
+{
+  "run_id": "20260604_144453",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "กดส้นเท้าลงเป็นหลัก",
+      "start": 12.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ส้นเท้าแนบพื้น",
+      "start": 25.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups highlight the core technique cues: driving through the heel on the step-up, keeping the heel fully flat during the squat, and the muscle-activation shift from quads/knees to heel and glutes.",
+  "cleanup": {
+    "notes": "Two dominant error patterns: (1) tone-mark confusion on ย่อ→ยอด across two segments, producing fitness-nonsensical text; (2) sound-alike consonant substitution บ→ป on บ่าย→ปวด. Additional fixes: tone-mark เสื่อ/เสือ (mat vs tiger), spurious ล in พอลวาง (overlapping audio windows), and a loan-word spelling gap on ฟังก์ชันนัล.",
+    "corrections": [
+      {
+        "index": 0,
+        "original": "เรายอดลงเนี่ย",
+        "corrected": "เราย่อลงเนี่ย",
+        "confidence": "high",
+        "reason": "tone-mark error — ย่อ (to lower/bend) fits lunge context; ยอด (peak/tip) does not. Same error recurs at index 9.",
+        "applied": true
+      },
+      {
+        "index": 1,
+        "original": "ฟังชันอล",
+        "corrected": "ฟังก์ชันนัล",
+        "confidence": "medium",
+        "reason": "loan-word mis-spelling — missing silent ก์ cluster and non-standard -อล ending; ฟังก์ชันนัล is the standard Thai transliteration of 'functional'",
+        "applied": true
+      },
+      {
+        "index": 3,
+        "original": "บ่ายเจ็บ",
+        "corrected": "ปวดเจ็บ",
+        "confidence": "high",
+        "reason": "sound-alike substitution — อาการปวดเจ็บ (pain symptoms) is standard fitness vocabulary; อาการบ่ายเจ็บ (afternoon pain) is nonsensical here",
+        "applied": true
+      },
+      {
+        "index": 6,
+        "original": "เสือ",
+        "corrected": "เสื่อ",
+        "confidence": "high",
+        "reason": "tone-mark error — เสื่อ (mat) fits perfectly as a foldable exercise mat that helps heel contact; เสือ (tiger) is nonsensical",
+        "applied": true
+      },
+      {
+        "index": 7,
+        "original": "พอลวาง",
+        "corrected": "พอวาง",
+        "confidence": "medium",
+        "reason": "spurious ล — พอวางเข่า (when placing the knee down) reads correctly; พอลวาง is not a Thai word/phrase. Same artifact at index 8.",
+        "applied": true
+      },
+      {
+        "index": 8,
+        "original": "พอลวาง",
+        "corrected": "พอวาง",
+        "confidence": "medium",
+        "reason": "same spurious ล as index 7 — repeated in overlapping audio window",
+        "applied": true
+      },
+      {
+        "index": 9,
+        "original": "ยอดลงไป",
+        "corrected": "ย่อลงไป",
+        "confidence": "high",
+        "reason": "tone-mark error — same pattern as index 0; ย่อลงไป (lower down) is the correct lunge cue; ยอดลงไป (go down to the peak) makes no sense",
+        "applied": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "run_id": "20260603_170812",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "กดส้นเท้าลง",
+      "start": 12.3,
+      "duration": 2.5
+    },
+    {
+      "text": "รองรับหัวเข่า",
+      "start": 22.6,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's core technique progression: proper heel grounding as the foundational cue (~12s), knee support benefit of the prop (~22s), and the long-term muscle recruitment goal of heel+glute activation over knee-dominant movement (~34s)."
+}

@@ -1,0 +1,24 @@
+{
+  "run_id": "20260601_190713",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "ลงน้ำหนักถูกต้อง",
+      "start": 10.1,
+      "duration": 2.5
+    },
+    {
+      "text": "รองรับหัวเข่า",
+      "start": 22.6,
+      "duration": 2.5
+    },
+    {
+      "text": "ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's three core ideas: correct weight distribution as the foundational tip (~10s), knee support via the foam pad as the key equipment benefit (~22s), and training the heel-and-glute chain instead of the quads/knee as the long-term goal (~33s)."
+}

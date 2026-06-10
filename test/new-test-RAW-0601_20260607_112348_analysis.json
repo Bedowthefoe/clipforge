@@ -1,0 +1,92 @@
+{
+  "run_id": "20260607_112348",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "สร้างกล้ามเนื้อแข็งแรง",
+      "start": 5.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าเป็นหลัก",
+      "start": 12.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's key beats: the functional strength benefit, the critical heel-press cue (the main technique taught), and the muscle-pattern payoff of using heel and glutes over quads and knees.",
+  "cleanup": {
+    "notes": "Seven corrections across four error types: repeated ยอด→ย่อ tone-mark errors on the squat-down cue (segments 0, 9); a ป/บ consonant swap producing the nonsense phrase บ่ายเจ็บ→ปวดเจ็บ (segment 3); a tone-mark error turning เสื่อ (mat) into เสือ (tiger) (segment 6); a spurious ล appended to พอ across two adjacent segments (7, 8); and a loan-word spelling error dropping ก์ from ฟังก์ชันนัล (segment 1).",
+    "corrections": [
+      {
+        "index": 0,
+        "original": "เรายอดลงเนี่ยนะครับ",
+        "corrected": "เราย่อลงเนี่ยนะครับ",
+        "confidence": "high",
+        "reason": "ยอด (tip/peak) makes no sense in a step-up exercise; ย่อลง (lower/bend down) is the standard fitness cue and differs only by a missing mai ek",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 1,
+        "original": "ฟังชันอล",
+        "corrected": "ฟังก์ชันนัล",
+        "confidence": "medium",
+        "reason": "Whisper dropped the ก์ cluster and mis-spelled the suffix; ฟังก์ชันนัล is the standard Thai rendering of 'functional' in a Thai-dominant sentence",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 3,
+        "original": "บ่ายเจ็บ",
+        "corrected": "ปวดเจ็บ",
+        "confidence": "high",
+        "reason": "บ่าย (afternoon) is nonsensical here; ปวดเจ็บ (aches and pains) fits the fitness context exactly and is a classic ป/บ sound-alike substitution",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 6,
+        "original": "เสือ",
+        "corrected": "เสื่อ",
+        "confidence": "high",
+        "reason": "เสือ (tiger) is nonsensical; เสื่อ (mat/pad) that folds is exactly what the following cue about placing the knee on it describes — tone-mark error (missing mai ek on ือ)",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 7,
+        "original": "พอล",
+        "corrected": "พอ",
+        "confidence": "high",
+        "reason": "พอล is not a Thai word in this context; the spurious ล is a Whisper insertion — แถมพอวางเข่า (moreover, once the knee is placed) completes the sentence correctly",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 8,
+        "original": "ถมพอล",
+        "corrected": "ถมพอ",
+        "confidence": "high",
+        "reason": "Continuation of the same พอล→พอ error across the segment boundary; ถมพอวางเข่า forms แถมพอวางเข่า with the trailing แ from segment 7",
+        "applied": true,
+        "apply_method": "substring replace"
+      },
+      {
+        "index": 9,
+        "original": "จังหวะที่ยอดลงไป",
+        "corrected": "จังหวะที่ย่อลงไป",
+        "confidence": "high",
+        "reason": "Identical ยอด→ย่อ tone-mark error as in segment 0; the speaker is again cueing the lowering phase of the step-up",
+        "applied": true,
+        "apply_method": "substring replace"
+      }
+    ]
+  }
+}

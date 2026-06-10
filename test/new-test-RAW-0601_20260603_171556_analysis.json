@@ -1,0 +1,24 @@
+{
+  "run_id": "20260603_171556",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "สร้างกล้ามเนื้อ",
+      "start": 5.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าลง",
+      "start": 20.3,
+      "duration": 2.5
+    },
+    {
+      "text": "ใช้ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's core progression: the functional muscle-building goal (5s), the key heel-press technique introduced with the step prop (20s), and the trained heel-and-glute activation pattern as the payoff (34s)."
+}

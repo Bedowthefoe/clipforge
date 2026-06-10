@@ -21,6 +21,7 @@ test/*.wav
 test/*.ass
 
 # Frame extracts are reproducible from the source mp4 — don't commit
+test/analysis/output_frames/
 test/analysis/output_frames_*/
 test/analysis/raw_frames/
 test/analysis/target_frames/

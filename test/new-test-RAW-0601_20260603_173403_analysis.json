@@ -1,0 +1,24 @@
+{
+  "run_id": "20260603_173403",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "ลงน้ำหนักถูกต้อง",
+      "start": 10.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าแนบพื้น",
+      "start": 25.3,
+      "duration": 2.5
+    },
+    {
+      "text": "คุ้นชินใช้งานก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's key instructional beats: the importance of correct weight distribution, the heel-press-to-floor cue repeated throughout, and the end goal of training the body to recruit the glutes and heel instead of the knees."
+}

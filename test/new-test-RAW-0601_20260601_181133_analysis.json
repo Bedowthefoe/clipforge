@@ -1,0 +1,24 @@
+{
+  "run_id": "20260601_181133",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": null,
+  "keyword_popups": [
+    {
+      "text": "สร้างกล้ามเนื้อ",
+      "start": 5.1,
+      "duration": 2.5
+    },
+    {
+      "text": "กดส้นเท้าลง",
+      "start": 15.8,
+      "duration": 2.5
+    },
+    {
+      "text": "ส้นเท้าและก้น",
+      "start": 33.7,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups mark the video's core progression: the functional muscle-building goal (5s), the central heel-press technique (16s), and the heel-and-glute activation pattern the repetition trains (34s)."
+}

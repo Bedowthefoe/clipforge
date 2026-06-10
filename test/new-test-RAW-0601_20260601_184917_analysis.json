@@ -1,0 +1,24 @@
+{
+  "run_id": "20260601_184917",
+  "input": "/home/nalloo/Projects/clipforge/test/new-test-RAW-0601.mp4",
+  "config": "config.yaml",
+  "transcript": "test/analysis/raw_0601_transcript.json",
+  "keyword_popups": [
+    {
+      "text": "ลงน้ำหนักถูกต้อง",
+      "start": 10.5,
+      "duration": 2.5
+    },
+    {
+      "text": "รองรับหัวเข่า",
+      "start": 22.6,
+      "duration": 2.5
+    },
+    {
+      "text": "ส้นเท้าแทนหน้าขา",
+      "start": 37.1,
+      "duration": 2.5
+    }
+  ],
+  "edit_note": "Three popups spaced across early, middle, and late thirds: the critical weight-placement cue (~10s), the knee-support benefit of the mat (~22s), and the key muscular pattern shift from quads to heel-and-glutes (~37s)."
+}
